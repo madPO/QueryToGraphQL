@@ -28,5 +28,16 @@ namespace UnitTest.Simple
             
             Assert.Equal("query GetEpisode{Name,Id}", result);
         }
+        
+        [Fact]
+        public void simple_query_with_select_of_episode()
+        {
+            var query = Enumerable.Empty<Episode>().AsQueryable().Select(x => new { x.Id });
+            var result = QueryParserFactory
+                .Create(query)
+                .Parse();
+            
+            Assert.Equal("query GetEpisode{Id}", result);
+        }
     }
 }

@@ -22,7 +22,12 @@
             </e>
           </e>
         </e>
-        <e p="QueryParser.cs" t="Include" />
+        <e p="Parser" t="Include">
+          <e p="QueryParser.Body.cs" t="Include" />
+          <e p="QueryParser.cs" t="Include" />
+          <e p="QueryParser.Header.cs" t="Include" />
+          <e p="QueryParser.Parameters.cs" t="Include" />
+        </e>
         <e p="QueryParserFactory.cs" t="Include" />
         <e p="QueryToGraphQL.csproj" t="IncludeRecursive" />
       </e>
@@ -47,6 +52,7 @@
       </e>
       <e p="Simple" t="Include">
         <e p="QueryParserTest.cs" t="Include" />
+        <e p="SimpleQueryTest.cs" t="Include" />
       </e>
       <e p="UnitTest.csproj" t="IncludeRecursive" />
     </e>

@@ -23,14 +23,22 @@ namespace UnitTest.Simple
         [Fact]
         public void queryparser_query_return()
         {
-            var result =  QueryParserFactory.Create(Enumerable.Empty<BaseModel>().AsQueryable());
+            var query = Enumerable.Empty<BaseModel>().AsQueryable();
+            var result =  QueryParserFactory
+                .Create(query)
+                .Parse();
+            
             Assert.Contains("query", result);
         }
 
         [Fact]
         public void queryparser_query_name_condition()
         {
-            var result =  QueryParserFactory.Create(Enumerable.Empty<BaseModel>().AsQueryable());
+            var query = Enumerable.Empty<BaseModel>().AsQueryable();
+            var result =  QueryParserFactory
+                .Create(query)
+                .Parse();
+            
             Assert.Contains("GetBaseModel", result);
         }
     }

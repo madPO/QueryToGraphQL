@@ -1,14 +1,14 @@
 namespace QueryToGraphQL
 {
     using System.Linq;
-    
+    using Parser;
+
     public static class QueryParserFactory
     {
-        public static string Create(IQueryable query)
+        public static QueryParser Create(IQueryable query)
         {
             var parser = new QueryParser();
-            parser.FromQuery(query);
-            return parser.Build();
+            return parser.FromQuery(query);
         }
     }
 }

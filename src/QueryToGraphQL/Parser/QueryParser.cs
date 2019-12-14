@@ -4,7 +4,6 @@ namespace QueryToGraphQL.Parser
     using System.Linq;
     using System.Linq.Expressions;
     using System.Text;
-    using Helper;
 
     public partial class QueryParser
     {

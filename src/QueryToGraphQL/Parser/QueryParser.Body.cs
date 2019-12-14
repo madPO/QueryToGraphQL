@@ -11,14 +11,6 @@ namespace QueryToGraphQL.Parser
         private void StartQueryBody(Context context, StringBuilder queryString)
         {
             var properties = context.Properties;
-            if (context.Properties.IsEmpty)
-            {
-                properties = context.BaseType
-                    .GetProperties(BindingFlags.Instance | BindingFlags.Public)
-                    .ToDictionary(x => x.Name, x => x.PropertyType)
-                    .ToImmutableDictionary();
-            }
-                
             var last = properties.Last().Key;
             foreach (var property in properties)
             {

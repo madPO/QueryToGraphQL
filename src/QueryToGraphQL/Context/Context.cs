@@ -3,6 +3,8 @@ namespace QueryToGraphQL.Context
     using System;
     using System.Collections.Generic;
     using System.Collections.Immutable;
+    using System.Linq;
+    using System.Reflection;
 
     /// <summary>
     /// Контекст для запроса
@@ -124,6 +126,19 @@ namespace QueryToGraphQL.Context
 
         }
 
-        public ImmutableDictionary<string, Type> Properties => _properties.ToImmutableDictionary();
+        public ImmutableSortedDictionary<string, Type> Properties
+        {
+            get
+            {
+                if (_properties == null || _properties.Count == 0)
+                {
+                    return BaseType
+                        .GetProperties(BindingFlags.Instance | BindingFlags.Public)
+                        .ToDictionary(x => x.Name, x => x.PropertyType)
+                        .ToImmutableSortedDictionary();
+                }
+                return _properties.ToImmutableSortedDictionary();
+            }
+        }
     }
 }

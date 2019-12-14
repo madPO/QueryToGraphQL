@@ -2,6 +2,7 @@ namespace QueryToGraphQL.Context
 {
     using System;
     using System.Collections.Generic;
+    using System.Collections.Immutable;
 
     /// <summary>
     /// Контекст для запроса
@@ -16,10 +17,13 @@ namespace QueryToGraphQL.Context
 
         private Dictionary<string, object> _variables;
 
+        private Dictionary<string, Type> _properties;
+
         public Context()
         {
             _arguments = new Dictionary<string, object>();
             _variables = new Dictionary<string, object>();
+            _properties = new Dictionary<string, Type>();
         }
 
         /// <summary>
@@ -104,5 +108,22 @@ namespace QueryToGraphQL.Context
         {
             return _arguments.ContainsKey(argumentName);
         }
+
+        /// <summary>
+        /// Добавить свойство
+        /// </summary>
+        /// <param name="propertyName"></param>
+        /// <param name="propertyType"></param>
+        /// <exception cref="ArgumentException"></exception>
+        public void AddProperty(string propertyName, Type propertyType)
+        {
+            if(ContainsArgument(propertyName))
+                throw new ArgumentException($"Property {propertyName} already exists!");
+            
+            _properties.Add(propertyName, propertyType);
+
+        }
+
+        public ImmutableDictionary<string, Type> Properties => _properties.ToImmutableDictionary();
     }
 }

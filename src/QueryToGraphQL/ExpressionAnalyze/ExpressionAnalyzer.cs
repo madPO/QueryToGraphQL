@@ -2,6 +2,7 @@ namespace QueryToGraphQL.ExpressionAnalyze
 {
     using System.Linq.Expressions;
     using Context;
+    using Visitor;
 
     /// <summary>
     /// Анализатор выражения
@@ -20,8 +21,8 @@ namespace QueryToGraphQL.ExpressionAnalyze
         /// </summary>
         public Context Analyze(Expression expression)
         {
-            var strategy = AnalyzeFactory.CreateStrategy(expression);
-            strategy.Execute(_context, expression);
+            var visitor = new ExpressionAnalyzeVisitor(_context);
+            visitor.Visit(expression);
 
             return _context;
         }

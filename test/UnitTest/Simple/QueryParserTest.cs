@@ -1,7 +1,7 @@
 namespace UnitTest.Simple
 {
     using System;
-    using System.Linq;
+    using Helpers;
     using Models.Simple;
     using QueryToGraphQL;
     using Xunit;
@@ -11,7 +11,7 @@ namespace UnitTest.Simple
         [Fact]
         public void queryparser_string_return()
         {
-            QueryParserFactory.Create(Enumerable.Empty<BaseModel>().AsQueryable());
+            QueryParserFactory.Create(TestHelper.CreateQuery<BaseModel>());
         }
 
         [Fact]
@@ -23,7 +23,7 @@ namespace UnitTest.Simple
         [Fact]
         public void queryparser_query_return()
         {
-            var query = Enumerable.Empty<BaseModel>().AsQueryable();
+            var query = TestHelper.CreateQuery<BaseModel>();
             var result =  QueryParserFactory
                 .Create(query)
                 .Parse();
@@ -34,7 +34,7 @@ namespace UnitTest.Simple
         [Fact]
         public void queryparser_query_name_condition()
         {
-            var query = Enumerable.Empty<BaseModel>().AsQueryable();
+            var query = TestHelper.CreateQuery<BaseModel>();
             var result =  QueryParserFactory
                 .Create(query)
                 .Parse();

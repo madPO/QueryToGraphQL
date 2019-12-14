@@ -1,6 +1,7 @@
 namespace UnitTest.Simple
 {
     using System.Linq;
+    using Helpers;
     using Models.Simple;
     using QueryToGraphQL;
     using Xunit;
@@ -10,7 +11,7 @@ namespace UnitTest.Simple
         [Fact]
         public void simple_query_for_all_field_of_basemodel()
         {
-            var query = Enumerable.Empty<BaseModel>().AsQueryable();
+            var query = TestHelper.CreateQuery<BaseModel>();
             var result = QueryParserFactory
                 .Create(query)
                 .Parse();
@@ -21,7 +22,7 @@ namespace UnitTest.Simple
         [Fact]
         public void simple_query_for_all_field_of_episode()
         {
-            var query = Enumerable.Empty<Episode>().AsQueryable();
+            var query = TestHelper.CreateQuery<Episode>();
             var result = QueryParserFactory
                 .Create(query)
                 .Parse();
@@ -32,7 +33,8 @@ namespace UnitTest.Simple
         [Fact]
         public void simple_query_with_select_of_episode()
         {
-            var query = Enumerable.Empty<Episode>().AsQueryable().Select(x => new { x.Id });
+            var query = TestHelper.CreateQuery<Episode>()
+                .Select(x => new { x.Id });
             var result = QueryParserFactory
                 .Create(query)
                 .Parse();

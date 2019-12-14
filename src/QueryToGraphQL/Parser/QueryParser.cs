@@ -10,6 +10,8 @@ namespace QueryToGraphQL.Parser
     {
         private Expression _expression;
 
+        private Type _returnType;
+
         private StringBuilder _queryString;
 
         public QueryParser()
@@ -22,6 +24,7 @@ namespace QueryToGraphQL.Parser
             if(query == null)
                 throw new ArgumentException("query");
             
+            _returnType = query.ElementType;
             _expression = query.Expression;
             return this;
         }

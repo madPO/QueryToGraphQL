@@ -9,8 +9,7 @@ namespace QueryToGraphQL.Parser
     {
         private void StartQueryBody(Expression expression, StringBuilder queryString)
         {
-            var entityType = expression.Type.GenericTypeArguments.First();
-            var properties = entityType.GetProperties(BindingFlags.Instance | BindingFlags.Public);
+            var properties = _returnType.GetProperties(BindingFlags.Instance | BindingFlags.Public);
             var last = properties.Last();
             foreach (var property in properties)
             {

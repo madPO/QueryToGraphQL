@@ -27,7 +27,7 @@ namespace UnitTest.Simple
                 .Create(query)
                 .Parse();
             
-            Assert.Equal("query GetEpisode{Name,Id}", result);
+            Assert.Equal("query GetEpisode{Id,Name}", result);
         }
         
         [Fact]

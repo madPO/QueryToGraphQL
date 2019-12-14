@@ -6,9 +6,9 @@ namespace QueryToGraphQL.Context
     /// <summary>
     /// Контекст для запроса
     /// </summary>
-    internal class Context
+    public class Context
     {
-        private Type _baseTye;
+        private Type _baseType;
 
         private Type _returnType;
 
@@ -16,7 +16,7 @@ namespace QueryToGraphQL.Context
 
         private Dictionary<string, object> _variables;
 
-        internal Context()
+        public Context()
         {
             _arguments = new Dictionary<string, object>();
             _variables = new Dictionary<string, object>();
@@ -26,15 +26,15 @@ namespace QueryToGraphQL.Context
         /// Базовый тип запроса
         /// </summary>
         /// <exception cref="ArgumentException"></exception>
-        internal Type BaseTye
+        public Type BaseType
         {
-            get => _baseTye;
+            get => _baseType;
             set
             {
-                if(_baseTye != null)
+                if(_baseType != null)
                     throw new ArgumentException("The base type was already set!");
 
-                _baseTye = value;
+                _baseType = value;
             }
         }
 
@@ -42,7 +42,7 @@ namespace QueryToGraphQL.Context
         /// Тип возвращаемого значения
         /// </summary>
         /// <exception cref="ArgumentException"></exception>
-        internal Type ReturnType
+        public Type ReturnType
         {
             get => _returnType;
             set
@@ -63,7 +63,7 @@ namespace QueryToGraphQL.Context
         /// <param name="variableName"></param>
         /// <param name="variable"></param>
         /// <exception cref="ArgumentException"></exception>
-        internal void AddVariable(string variableName, object variable)
+        public void AddVariable(string variableName, object variable)
         {
             if(ContainsVariable(variableName))
                 throw new ArgumentException($"Variable {variableName} already exists!");
@@ -76,7 +76,7 @@ namespace QueryToGraphQL.Context
         /// </summary>
         /// <param name="variableName"></param>
         /// <returns></returns>
-        internal bool ContainsVariable(string variableName)
+        public bool ContainsVariable(string variableName)
         {
             return _variables.ContainsKey(variableName);
         }
@@ -87,7 +87,7 @@ namespace QueryToGraphQL.Context
         /// <param name="argumentName"></param>
         /// <param name="argument"></param>
         /// <exception cref="ArgumentException"></exception>
-        internal void AddArgument(string argumentName, object argument)
+        public void AddArgument(string argumentName, object argument)
         {
             if(ContainsArgument(argumentName))
                 throw new ArgumentException($"Argument {argumentName} already exists!");
@@ -100,7 +100,7 @@ namespace QueryToGraphQL.Context
         /// </summary>
         /// <param name="argumentName"></param>
         /// <returns></returns>
-        internal bool ContainsArgument(string argumentName)
+        public bool ContainsArgument(string argumentName)
         {
             return _arguments.ContainsKey(argumentName);
         }

@@ -15,14 +15,7 @@ namespace QueryToGraphQL.Parser
                 .Member(x => x.Properties, p => p.NotEmpty());
             Guard.Argument(queryString).NotNull();
             
-            var properties = context.Properties;
-            var last = properties.Last().Key;
-            foreach (var property in properties)
-            {
-                queryString.Append(property.Key);
-                if(property.Key != last)
-                    queryString.Append(",");
-            }
+            queryString.Append(string.Join(",", context.Properties.Values));
         }
         
         private void EndQueryBody(Context context, StringBuilder queryString)

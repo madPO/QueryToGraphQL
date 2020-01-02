@@ -27,7 +27,7 @@ namespace UnitTest.Simple
                 .Create(query)
                 .Parse();
             
-            Assert.Equal("query GetEpisode{Id,Name}", result);
+            Assert.Equal("query GetEpisode{Author,Id,Name}", result);
         }
         
         [Fact]
@@ -40,6 +40,18 @@ namespace UnitTest.Simple
                 .Parse();
             
             Assert.Equal("query GetEpisode{Id}", result);
+        }
+
+        [Fact]
+        public void simple_query_with_select_of_person()
+        {
+            var query = TestHelper.CreateQuery<Episode>()
+                .Select(x => new { x.Id, x.Author.Name });
+            var result = QueryParserFactory
+                .Create(query)
+                .Parse();
+            
+            Assert.Equal("query GetEpisode{Author{Name},Id}", result);
         }
     }
 }

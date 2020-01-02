@@ -5,6 +5,8 @@ namespace QueryToGraphQL.Context
     using System.Collections.Immutable;
     using System.Linq;
     using System.Reflection;
+    using Dawn;
+    using JetBrains.Annotations;
 
     /// <summary>
     /// Контекст для запроса
@@ -15,11 +17,11 @@ namespace QueryToGraphQL.Context
 
         private Type _returnType;
 
-        private Dictionary<string, object> _arguments;
+        private readonly Dictionary<string, object> _arguments;
 
-        private Dictionary<string, object> _variables;
+        private readonly Dictionary<string, object> _variables;
 
-        private Dictionary<string, Type> _properties;
+        private readonly Dictionary<string, Type> _properties;
 
         public Context()
         {
@@ -37,9 +39,7 @@ namespace QueryToGraphQL.Context
             get => _baseType;
             set
             {
-                if(_baseType != null)
-                    throw new ArgumentException("The base type was already set!");
-
+                Guard.Argument(_baseType).Null(x => "The base type was already set!");
                 _baseType = value;
             }
         }
@@ -53,11 +53,8 @@ namespace QueryToGraphQL.Context
             get => _returnType;
             set
             {
-                if(_returnType != null)
-                    throw new ArgumentException("The return type was already set!");
-                
-                if(value.IsPrimitive)
-                    throw new ArgumentException("The return type must be an object!");
+                Guard.Argument(_returnType).Null(x => "The return type was already set!");
+                Guard.Argument(value).Require((x) => !x.IsPrimitive, (x) => "The return type must be an object!");
 
                 _returnType = value;
             }
@@ -69,46 +66,34 @@ namespace QueryToGraphQL.Context
         /// <param name="variableName"></param>
         /// <param name="variable"></param>
         /// <exception cref="ArgumentException"></exception>
-        public void AddVariable(string variableName, object variable)
+        public void AddVariable([NotNull] string variableName, [NotNull] object variable)
         {
-            if(ContainsVariable(variableName))
-                throw new ArgumentException($"Variable {variableName} already exists!");
+            Guard.Argument(variableName).NotEmpty();
+            Guard.Argument(variable).NotNull();
+            Guard.Argument(_variables)
+                .Require(
+                    x => !x.ContainsKey(variableName), 
+                    d => $"Variable {variableName} already exists!");
             
             _variables.Add(variableName, variable);
         }
 
-        /// <summary>
-        /// Наличие переменной
-        /// </summary>
-        /// <param name="variableName"></param>
-        /// <returns></returns>
-        public bool ContainsVariable(string variableName)
-        {
-            return _variables.ContainsKey(variableName);
-        }
-        
         /// <summary>
         /// Добавить аргумент запроса
         /// </summary>
         /// <param name="argumentName"></param>
         /// <param name="argument"></param>
         /// <exception cref="ArgumentException"></exception>
-        public void AddArgument(string argumentName, object argument)
+        public void AddArgument([NotNull] string argumentName,[NotNull] object argument)
         {
-            if(ContainsArgument(argumentName))
-                throw new ArgumentException($"Argument {argumentName} already exists!");
-            
-            _arguments.Add(argumentName, argument);
-        }
+            Guard.Argument(argumentName).NotEmpty();
+            Guard.Argument(argument).NotNull();
+            Guard.Argument(_variables)
+                .Require(
+                    x => !x.ContainsKey(argumentName), 
+                    d => $"Argument {argumentName} already exists!");
 
-        /// <summary>
-        /// Наличие аргумента
-        /// </summary>
-        /// <param name="argumentName"></param>
-        /// <returns></returns>
-        public bool ContainsArgument(string argumentName)
-        {
-            return _arguments.ContainsKey(argumentName);
+            _arguments.Add(argumentName, argument);
         }
 
         /// <summary>
@@ -117,15 +102,21 @@ namespace QueryToGraphQL.Context
         /// <param name="propertyName"></param>
         /// <param name="propertyType"></param>
         /// <exception cref="ArgumentException"></exception>
-        public void AddProperty(string propertyName, Type propertyType)
+        public void AddProperty([NotNull] string propertyName,[NotNull] Type propertyType)
         {
-            if(ContainsArgument(propertyName))
-                throw new ArgumentException($"Property {propertyName} already exists!");
-            
-            _properties.Add(propertyName, propertyType);
+            Guard.Argument(propertyName).NotEmpty();
+            Guard.Argument(propertyType).NotNull();
+            Guard.Argument(_properties)
+                .Require(
+                    x => !x.ContainsKey(propertyName),
+                    x => $"Property {propertyName} already exists!");
 
+            _properties.Add(propertyName, propertyType);
         }
 
+        /// <summary>
+        /// Свойства
+        /// </summary>
         public ImmutableSortedDictionary<string, Type> Properties
         {
             get
@@ -138,6 +129,28 @@ namespace QueryToGraphQL.Context
                         .ToImmutableSortedDictionary();
                 }
                 return _properties.ToImmutableSortedDictionary();
+            }
+        }
+        
+        /// <summary>
+        /// Переменные
+        /// </summary>
+        public ImmutableSortedDictionary<string, object> Variables
+        {
+            get
+            {
+                return _variables.ToImmutableSortedDictionary();
+            }
+        }
+        
+        /// <summary>
+        /// Аргументы
+        /// </summary>
+        public ImmutableSortedDictionary<string, object> Arguments
+        {
+            get
+            {
+                return _arguments.ToImmutableSortedDictionary();
             }
         }
     }

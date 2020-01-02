@@ -4,7 +4,9 @@ namespace QueryToGraphQL.Parser
     using System.Linq;
     using System.Linq.Expressions;
     using System.Text;
+    using Dawn;
     using ExpressionAnalyze;
+    using JetBrains.Annotations;
 
     public partial class QueryParser
     {
@@ -17,10 +19,11 @@ namespace QueryToGraphQL.Parser
             _queryString = new StringBuilder();
         }
 
-        public QueryParser FromQuery(IQueryable query)
+        public QueryParser FromQuery([NotNull] IQueryable query)
         {
-            if(query == null)
-                throw new ArgumentException("query");
+            Guard.Argument(query)
+                .NotNull()
+                .Member(x => x.Expression, x => x.NotNull());
 
             _expression = query.Expression;
             return this;
@@ -28,8 +31,7 @@ namespace QueryToGraphQL.Parser
 
         public string Parse()
         {
-            if(_expression == null)
-                throw new ArgumentException("_expression");
+            Guard.Argument(_expression).NotNull();
                 
             var analyzer = new ExpressionAnalyzer();
             var context = analyzer.Analyze(_expression);

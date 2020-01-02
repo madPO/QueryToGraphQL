@@ -1,7 +1,10 @@
 namespace QueryToGraphQL.ExpressionAnalyze
 {
+    using System;
     using System.Linq.Expressions;
     using Context;
+    using Dawn;
+    using JetBrains.Annotations;
     using Visitor;
 
     /// <summary>
@@ -19,8 +22,11 @@ namespace QueryToGraphQL.ExpressionAnalyze
         /// <summary>
         /// Анализировать выражение
         /// </summary>
-        public Context Analyze(Expression expression)
+        /// <exception cref="ArgumentException"></exception>
+        public Context Analyze([NotNull] Expression expression)
         {
+            Guard.Argument(expression).NotNull();
+            
             var visitor = new ExpressionAnalyzeVisitor(_context);
             visitor.Visit(expression);
 

@@ -1,15 +1,20 @@
 namespace QueryToGraphQL.Parser
 {
-    using System.Collections.Immutable;
     using System.Linq;
-    using System.Reflection;
     using System.Text;
     using Context;
+    using Dawn;
+    using JetBrains.Annotations;
 
     public partial class QueryParser
     {
-        private void StartQueryBody(Context context, StringBuilder queryString)
+        private void StartQueryBody([NotNull] Context context, [NotNull] StringBuilder queryString)
         {
+            Guard.Argument(context)
+                .NotNull()
+                .Member(x => x.Properties, p => p.NotEmpty());
+            Guard.Argument(queryString).NotNull();
+            
             var properties = context.Properties;
             var last = properties.Last().Key;
             foreach (var property in properties)

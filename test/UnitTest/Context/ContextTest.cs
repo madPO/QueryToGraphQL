@@ -73,7 +73,7 @@ namespace UnitTest.Context
             
             context.AddVariable(varName, fixture.Create<object>());
             
-            Assert.True(context.ContainsVariable(varName));
+            Assert.True(context.Variables.ContainsKey(varName));
         }
 
         [Fact]
@@ -106,7 +106,7 @@ namespace UnitTest.Context
             
             context.AddArgument(argName, fixture.Create<object>());
             
-            Assert.True(context.ContainsArgument(argName));
+            Assert.True(context.Arguments.ContainsKey(argName));
         }
 
         [Fact]

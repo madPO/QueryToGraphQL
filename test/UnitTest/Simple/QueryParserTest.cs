@@ -17,7 +17,7 @@ namespace UnitTest.Simple
         [Fact]
         public void queryparser_argument_exception()
         {
-            Assert.Throws<ArgumentException>(() => QueryParserFactory.Create(null));
+            Assert.Throws<ArgumentNullException>(() => QueryParserFactory.Create(null));
         }
 
         [Fact]

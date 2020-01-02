@@ -1,34 +1,30 @@
-namespace QueryToGraphQL.ExpressionAnalyze.Visitor
+namespace QueryToGraphQL.ExpressionAnalyze.MethodCallVisitors
 {
-    using System;
     using System.Linq;
     using System.Linq.Expressions;
     using System.Reflection;
+    using Context;
     using Dawn;
-    using JetBrains.Annotations;
 
-    public partial class ExpressionAnalyzeVisitor
+    public class SelectMethodCallVisitor: IMethodCallVisitor
     {
-        protected override Expression VisitMethodCall([NotNull] MethodCallExpression node)
+        public bool HasVisit(MethodCallExpression node)
         {
             Guard.Argument(node)
                 .NotNull()
                 .Member(x => x.Method.Name, n => n.NotNull());
 
-            var visitor = _methodCallFactory.Get(node);
-            if(visitor == null)
-                throw new ArgumentNullException($"There is no visitor for method {node.Method.Name}!");
-            
-            visitor.Visit(this, node, _context);
-            return node;
+            return node.Method.Name.ToLower() == "select";
         }
 
-        private void SelectVisit([NotNull] MethodCallExpression node)
+        public void Visit(ExpressionVisitor visitor, MethodCallExpression node, Context context)
         {
             Guard.Argument(node)
                 .NotNull()
                 .Member(x => x.Method.ReturnType, r => r.NotNull())
                 .Member(x => x.Arguments, a => a.NotEmpty());
+            Guard.Argument(visitor).NotNull();
+            Guard.Argument(context).NotNull();
                 
             
             var queryType = node.Method.ReturnType;
@@ -39,10 +35,10 @@ namespace QueryToGraphQL.ExpressionAnalyze.Visitor
             var props = type.GetProperties(BindingFlags.Instance | BindingFlags.Public);
             foreach (var prop in props)
             {
-                _context.AddProperty(prop.Name, prop.PropertyType);
+                context.AddProperty(prop.Name, prop.PropertyType);
             }
             
-            Visit(node.Arguments.First());
+            visitor.Visit(node.Arguments.First());
         }
     }
 }
